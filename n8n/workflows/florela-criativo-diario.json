@@ -1,0 +1,256 @@
+{
+  "id": "FlorelaDaily0001",
+  "name": "Florela – Criativo diário",
+  "active": false,
+  "nodes": [
+    {
+      "id": "cron",
+      "name": "Todo dia 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "manual",
+      "name": "Rodar agora (teste)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "1.-curadoria-shopify",
+      "name": "1. Curadoria Shopify",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        260,
+        100
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://agents:3000/pipeline/curate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "id": "if-paused",
+      "name": "Pausado?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        500,
+        100
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.skipped === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "2.-visão-gemini",
+      "name": "2. Visão Gemini",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        760,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://agents:3000/pipeline/analyze",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ runId: $json.runId }) }}",
+        "options": {
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "id": "3.-copy-claude",
+      "name": "3. Copy Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1000,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://agents:3000/pipeline/script",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ runId: $('1. Curadoria Shopify').item.json.runId }) }}",
+        "options": {
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "id": "4.-mídia-higgsfield",
+      "name": "4. Mídia Higgsfield",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1240,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://agents:3000/pipeline/render",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ runId: $('1. Curadoria Shopify').item.json.runId }) }}",
+        "options": {
+          "timeout": 600000
+        }
+      }
+    },
+    {
+      "id": "5.-aprovação-telegram",
+      "name": "5. Aprovação Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1480,
+        200
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "http://agents:3000/pipeline/review",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ runId: $('1. Curadoria Shopify').item.json.runId }) }}",
+        "options": {
+          "timeout": 600000
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Todo dia 07:00": {
+      "main": [
+        [
+          {
+            "node": "1. Curadoria Shopify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rodar agora (teste)": {
+      "main": [
+        [
+          {
+            "node": "1. Curadoria Shopify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Curadoria Shopify": {
+      "main": [
+        [
+          {
+            "node": "Pausado?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausado?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "2. Visão Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Visão Gemini": {
+      "main": [
+        [
+          {
+            "node": "3. Copy Claude",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Copy Claude": {
+      "main": [
+        [
+          {
+            "node": "4. Mídia Higgsfield",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Mídia Higgsfield": {
+      "main": [
+        [
+          {
+            "node": "5. Aprovação Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo"
+  },
+  "pinData": {}
+}

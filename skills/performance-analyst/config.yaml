@@ -1,0 +1,4 @@
+provider: claude
+model: claude-sonnet-5-5
+max_tokens: 3000
+lookback_days: 7

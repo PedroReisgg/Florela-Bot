@@ -1,0 +1,5 @@
+# Preencha N8N_DOMAIN no .env (ex.: florela.duckdns.org) e suba com o profile "https".
+{$N8N_DOMAIN} {
+	encode gzip
+	reverse_proxy n8n:5678
+}

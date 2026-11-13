@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "properties": {
+    "titulo_interno": {"type": "string"},
+    "duracao_segundos": {"type": "integer"},
+    "cenas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "inicio_s": {"type": "number"},
+          "fim_s": {"type": "number"},
+          "texto_na_tela": {"type": "string"},
+          "narracao": {"type": "string"},
+          "prompt_video_en": {"type": "string"}
+        },
+        "required": ["inicio_s", "fim_s", "texto_na_tela", "prompt_video_en"]
+      }
+    },
+    "musica_sugerida": {"type": "string"},
+    "legenda": {"type": "string"},
+    "hashtags": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["titulo_interno", "duracao_segundos", "cenas", "legenda", "hashtags"]
+}

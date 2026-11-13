@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "laminas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "numero": {"type": "integer"},
+          "texto": {"type": "string"},
+          "imagem": {"type": "string", "enum": ["foto_original", "lifestyle"]},
+          "foto_original_indice": {"type": "integer"},
+          "prompt_imagem_en": {"type": "string"}
+        },
+        "required": ["numero", "texto", "imagem"]
+      }
+    },
+    "legenda": {"type": "string"},
+    "hashtags": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["laminas", "legenda", "hashtags"]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "properties": {
+    "angulos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tipo": {"type": "string", "enum": ["dor", "desejo", "prova"]},
+          "gancho": {"type": "string"},
+          "nivel_consciencia": {"type": "integer"},
+          "cialdini": {"type": "array", "items": {"type": "string"}},
+          "hormozi": {"type": "string"}
+        },
+        "required": ["tipo", "gancho", "nivel_consciencia", "cialdini", "hormozi"]
+      }
+    },
+    "recomendado": {"type": "string", "enum": ["dor", "desejo", "prova"]},
+    "motivo": {"type": "string"}
+  },
+  "required": ["angulos", "recomendado", "motivo"]
+}

@@ -1,0 +1,4 @@
+provider: gemini
+model: gemini-2.5-flash     # confirme o id mais atual em https://ai.google.dev/gemini-api/docs/models
+temperature: 0.4
+max_images: 4

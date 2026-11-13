@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "properties": {
+    "cores_e_acabamento": {"type": "string"},
+    "formato_e_caimento": {"type": "string"},
+    "pontos_fortes": {"type": "array", "items": {"type": "string"}},
+    "cenarios_lifestyle": {"type": "array", "items": {"type": "string"}},
+    "formatos_de_video": {"type": "array", "items": {"type": "string"}},
+    "nao_alterar": {"type": "array", "items": {"type": "string"}}
+  },
+  "required": ["cores_e_acabamento", "formato_e_caimento", "pontos_fortes", "cenarios_lifestyle", "formatos_de_video", "nao_alterar"]
+}

@@ -1,0 +1,12 @@
+# Seleção de produto do dia (regras determinísticas, sem custo de IA)
+provider: rules
+candidates_limit: 50          # quantos produtos ativos buscar na Shopify
+new_product_days: 21          # produto criado há menos de X dias conta como lançamento
+low_stock_threshold: 5        # estoque abaixo disso: "últimas unidades" (escassez real)
+overstock_threshold: 30       # estoque acima disso: "estoque parado", prioridade de giro
+min_days_between_repeats: 14  # não repetir o mesmo produto antes de X dias
+weight_new: 3
+weight_overstock: 2
+weight_low_stock: 1
+utm_source: instagram
+utm_medium: organic

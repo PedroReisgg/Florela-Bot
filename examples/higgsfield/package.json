@@ -1,0 +1,23 @@
+{
+  "name": "florela-higgsfield-example",
+  "version": "1.0.0",
+  "description": "Higgsfield Seedance 2.5 text-to-video example",
+  "scripts": {
+    "start": "tsx index.ts",
+    "gen": "tsx cli.ts",
+    "check": "tsc"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@higgsfield/client": "^0.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  },
+  "private": true,
+  "type": "module"
+}

@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { parseArgs } from "node:util";
 import { config, higgsfield } from "@higgsfield/client/v2";
 
@@ -22,6 +22,7 @@ const { values } = parseArgs({
     aspect: { type: "string", short: "a", default: "16:9" },
     resolution: { type: "string", short: "r", default: "720p" },
     model: { type: "string", short: "m" },
+    yes: { type: "boolean", short: "y" },
     help: { type: "boolean", short: "h" },
   },
 });
@@ -58,6 +59,23 @@ if (type === "video") {
     ? { prompt: values.prompt, aspect_ratio: values.aspect, resolution: values.resolution }
     : { prompt: values.prompt };
 }
+
+// Cost guard: without --yes this only shows what WOULD run (model, parameters, estimated credits) and exits.
+// Credit prices are NOT fetched from the API; they come from prices.json, which you maintain from Higgsfield's pricing page.
+let estimate = "unknown (no entry in prices.json)";
+try {
+  const prices = JSON.parse(readFileSync(new URL("./prices.json", import.meta.url), "utf8")) as Record<string, string>;
+  if (prices[model]) estimate = prices[model];
+} catch {
+  /* no prices.json: estimate stays unknown */
+}
+if (!values.yes) {
+  console.error(
+    `DRY RUN, nothing generated and nothing charged.\nModel: ${model}\nParameters: ${JSON.stringify(input)}\nEstimated cost: ${estimate}\nRe-run with --yes after the user approves this model and cost.`,
+  );
+  process.exit(2);
+}
+console.error(`Running ${model} (estimated cost: ${estimate})`);
 
 try {
   const result = await higgsfield.subscribe(model, { input, withPolling: true });

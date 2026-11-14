@@ -4,6 +4,7 @@
   "description": "Higgsfield Seedance 2.5 text-to-video example",
   "scripts": {
     "start": "tsx index.ts",
+    "gen": "tsx cli.ts",
     "check": "tsc"
   },
   "keywords": [],
